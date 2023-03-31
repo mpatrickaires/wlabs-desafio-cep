@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Caching.Distributed;
+using StackExchange.Redis;
 using System.Text.Json;
 using WLabsDesafioCEP.Infra.Data.Interfaces;
 
@@ -13,38 +14,65 @@ namespace WLabsDesafioCEP.Infra.Data.Gateways
             _cacheService = cacheService;
         }
 
-        public Task<string?> ObterAsync(string chave)
+        public async Task<string?> ObterAsync(string chave)
         {
-            return _cacheService.GetStringAsync(chave);
-        }
-
-        public async Task<T?> ObterDesserializadoAsync<T>(string chave, bool removerSeDesserializacaoFalhar = true) 
-            where T : class
-        {
-            string? valorString = await _cacheService.GetStringAsync(chave);
-
-            if (valorString == null) return null;
-
             try
             {
-                T? valorDesserializado = JsonSerializer.Deserialize<T>(valorString);
-                return valorDesserializado;
+                string? valorCache = await _cacheService.GetStringAsync(chave);
+                return valorCache;
             }
-            catch (JsonException)
+            catch (RedisConnectionException)
             {
-                if (removerSeDesserializacaoFalhar) _ = _cacheService.RemoveAsync(chave);
+                return null;
+            }
+        }
+
+        public async Task<T?> ObterDesserializadoAsync<T>(string chave, bool removerSeDesserializacaoFalhar = true)
+            where T : class
+        {
+            try
+            {
+                string? valorString = await _cacheService.GetStringAsync(chave);
+
+                if (valorString == null) return null;
+
+                try
+                {
+                    T? valorDesserializado = JsonSerializer.Deserialize<T>(valorString);
+                    return valorDesserializado;
+                }
+                catch (JsonException)
+                {
+                    if (removerSeDesserializacaoFalhar) _ = _cacheService.RemoveAsync(chave);
+                    return null;
+                }
+            }
+            catch (RedisConnectionException)
+            {
                 return null;
             }
         }
 
         public async Task RemoverAsync(string chave)
         {
-            await _cacheService.RemoveAsync(chave);
+            try
+            {
+                await _cacheService.RemoveAsync(chave);
+            }
+            catch (RedisConnectionException)
+            {
+            }
         }
 
         public async Task SalvarAsync<T>(string chave, T valor)
         {
-            await _cacheService.SetStringAsync(chave, JsonSerializer.Serialize(valor));
+            try
+            {
+                await _cacheService.SetStringAsync(chave, JsonSerializer.Serialize(valor));
+            }
+            catch (RedisConnectionException)
+            {
+            }
         }
     }
 }

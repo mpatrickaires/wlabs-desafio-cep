@@ -1,4 +1,5 @@
 using WLabsDesafioCEP.Infra.IoC;
+using WLabsDesafioCEP.WebAPI.Common.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,6 +13,8 @@ builder.Services.AddSwaggerGen();
 builder.Services.ConfigurarServicos();
 
 var app = builder.Build();
+
+app.ConfigurarMiddlewareTratamentoException();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

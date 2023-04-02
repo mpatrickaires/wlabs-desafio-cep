@@ -1,6 +1,9 @@
-﻿namespace WLabsDesafioCEP.Infra.Data.Common.Dtos
+﻿using WLabsDesafioCEP.Domain.Entities;
+using WLabsDesafioCEP.Infra.Data.Interfaces;
+
+namespace WLabsDesafioCEP.Infra.Data.Common.Dtos
 {
-    public class EnderecoAwesomeApiDto
+    public class EnderecoAwesomeApiDto : IMapeavelParaEndereco
     {
         public string Cep { get; set; }
 
@@ -23,5 +26,14 @@
         public string CityIbge { get; set; }
 
         public string Ddd { get; set; }
+
+        public Endereco MapearParaEndereco() => new Endereco
+        {
+            Cep = Cep,
+            Logradouro = Address,
+            Bairro = District,
+            Cidade = City,
+            Estado = State,
+        };
     }
 }

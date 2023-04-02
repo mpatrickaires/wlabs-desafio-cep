@@ -1,8 +1,6 @@
 ﻿using WLabsDesafioCEP.Domain.Entities;
+using WLabsDesafioCEP.Domain.Exceptions;
 using WLabsDesafioCEP.Domain.ValueObjects;
-using WLabsDesafioCEP.Infra.Data.Clients;
-using WLabsDesafioCEP.Infra.Data.Common.Dtos;
-using WLabsDesafioCEP.Infra.Data.Common.Mappings;
 using WLabsDesafioCEP.Infra.Data.Interfaces;
 
 namespace WLabsDesafioCEP.Infra.Data.Gateways
@@ -22,36 +20,39 @@ namespace WLabsDesafioCEP.Infra.Data.Gateways
 
         public async Task<Endereco> ObterEnderecoPeloCepAsync(Cep cep)
         {
-            Task<EnderecoViaCepDto> viaCepTask = _viaCepClient.ObterEnderecoPeloCep(cep.Valor);
-            Task<EnderecoApiCepDto> apiCepTask = _apiCepClient.ObterEnderecoPeloCep(cep.ValorComSeparador);
-            Task<EnderecoAwesomeApiDto> awesomeApiTask = _awesomeApiClient.ObterEnderecoPeloCep(cep.Valor);
-
-            var tasks = new List<Task> { viaCepTask, awesomeApiTask, apiCepTask };
-
-            while (tasks.Any())
+            Task<IMapeavelParaEndereco> viaCepTask = _viaCepClient.ObterEnderecoPeloCepAsync(cep);
+            Task<IMapeavelParaEndereco> apiCepTask = _apiCepClient.ObterEnderecoPeloCepAsync(cep).ContinueWith(r =>
             {
-                Task result = await Task.WhenAny(tasks);
+                IMapeavelParaEndereco mapeavelParaEndereco = r.Result;
+                return mapeavelParaEndereco;
+            });
+            Task<IMapeavelParaEndereco> awesomeApiTask = _awesomeApiClient.ObterEnderecoPeloCepAsync(cep);
 
-                if (result == viaCepTask)
+            Endereco endereco = await AguardarTasks(viaCepTask, apiCepTask, awesomeApiTask);
+            return endereco;
+        }
+
+        private async Task<Endereco> AguardarTasks(params Task<IMapeavelParaEndereco>[] tasks)
+        {
+            List<Task<IMapeavelParaEndereco>> listaTasks = tasks.ToList();
+
+            while (listaTasks.Any())
+            {
+                Task<IMapeavelParaEndereco> task = await Task.WhenAny(tasks);
+                try
                 {
-                    EnderecoViaCepDto enderecoDto = await viaCepTask;
-                    return enderecoDto.MapearParaEndereco();
+                    IMapeavelParaEndereco resultado = await task;
+                    return resultado.MapearParaEndereco();
+
                 }
-
-                if (result == apiCepTask)
+                catch (Exception e)
                 {
-                    EnderecoApiCepDto enderecoDto = await apiCepTask;
-                    return enderecoDto.MapearParaEndereco();
-                }
-
-                if (result == awesomeApiTask)
-                {
-                    EnderecoAwesomeApiDto enderecoDto = await awesomeApiTask;
-                    return enderecoDto.MapearParaEndereco();
+                    if (e is CepInexistenteException) throw;
+                    listaTasks.Remove(task);
                 }
             }
 
-            return null;
+            throw new Exception();
         }
     }
 }

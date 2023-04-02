@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using WLabsDesafioCEP.Application.Common.Dtos;
 using WLabsDesafioCEP.Application.Interfaces;
+using WLabsDesafioCEP.WebAPI.Common.Dtos;
 
 namespace WLabsDesafioCEP.WebAPI.Controllers
 {
@@ -16,9 +18,9 @@ namespace WLabsDesafioCEP.WebAPI.Controllers
         }
 
         [HttpGet("{cep}")]
-        public async Task<IActionResult> ObterEnderecoPeloCepAsync(string cep)
+        public async Task<ActionResult<RespostaApiDto<EnderecoDto>>> ObterEnderecoPeloCepAsync(string cep)
         {
-            return Ok(await _enderecoService.ObterEnderecoPeloCepAsync(cep));
+            return new RespostaApiDto<EnderecoDto>(await _enderecoService.ObterEnderecoPeloCepAsync(cep));
         }
     }
 }

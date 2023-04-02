@@ -1,12 +1,8 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Refit;
-using WLabsDesafioCEP.Application.Interfaces;
-using WLabsDesafioCEP.Application.Services;
-using WLabsDesafioCEP.Domain.Interfaces;
-using WLabsDesafioCEP.Infra.Data.Clients;
-using WLabsDesafioCEP.Infra.Data.Gateways;
-using WLabsDesafioCEP.Infra.Data.Interfaces;
-using WLabsDesafioCEP.Infra.Data.Repositories;
+using WLabsDesafioCEP.Application;
+using WLabsDesafioCEP.Infra.Data;
+using WLabsDesafioCEP.Infra.Data.Refit;
 
 namespace WLabsDesafioCEP.Infra.IoC
 {
@@ -14,30 +10,42 @@ namespace WLabsDesafioCEP.Infra.IoC
     {
         public static IServiceCollection ConfigurarServicos(this IServiceCollection services)
         {
-            RegistrarServicos(services);
-            ConfigurarRedis(services);
-
-            return services;   
-        }
-
-        private static IServiceCollection RegistrarServicos(IServiceCollection services)
-        {
-            services.AddScoped<IEnderecoService, EnderecoService>();
-            services.AddScoped<IEnderecoRepository, EnderecoRepository>();
-            services.AddScoped<ICepGateway, CepGateway>();
-            services.AddScoped<ICacheGateway, CacheGateway>();
-
-            services.AddRefitClient<IViaCepClient>()
-                .ConfigureHttpClient(c => c.BaseAddress = new Uri("https://viacep.com.br/ws"));
-            services.AddRefitClient<IApiCepClient>()
-                .ConfigureHttpClient(c => c.BaseAddress = new Uri("https://cdn.apicep.com/file/apicep"));
-            services.AddRefitClient<IAwesomeApiClient>()
-                .ConfigureHttpClient(c => c.BaseAddress = new Uri("https://cep.awesomeapi.com.br/json"));
+            services.RegistrarServicos();
+            services.ConfigurarRefit();
+            services.ConfigurarRedis();
 
             return services;
         }
 
-        private static IServiceCollection ConfigurarRedis(IServiceCollection services)
+        private static void RegistrarServicos(this IServiceCollection services)
+        {
+            services.RegistrarServicosScoped<ClasseInfraDataAssembly>("Repository", "Gateway", "Client");
+            services.RegistrarServicosScoped<ClasseApplicationAssembly>("Service");
+        }
+
+        private static void RegistrarServicosScoped<TClasseAssembly>(this IServiceCollection services, 
+            params string[] sufixoTipos) 
+        {
+            services.Scan(scan => scan
+                .FromAssemblyOf<TClasseAssembly>()
+                .AddClasses(classes => classes.Where(tipo =>
+                    sufixoTipos.Any(nomeTipo => tipo.Name.EndsWith(nomeTipo))))
+                .AsImplementedInterfaces()
+                .WithScopedLifetime()
+            );
+        }
+
+        private static void ConfigurarRefit(this IServiceCollection services)
+        {
+            services.AddRefitClient<IViaCepRefit>()
+                .ConfigureHttpClient(c => c.BaseAddress = new Uri("https://viacep.com.br/ws"));
+            services.AddRefitClient<IApiCepRefit>()
+                .ConfigureHttpClient(c => c.BaseAddress = new Uri("https://cdn.apicep.com/file/apicep"));
+            services.AddRefitClient<IAwesomeApiRefit>()
+                .ConfigureHttpClient(c => c.BaseAddress = new Uri("https://cep.awesomeapi.com.br/json"));
+        }
+
+        private static IServiceCollection ConfigurarRedis(this IServiceCollection services)
         {
             services.AddStackExchangeRedisCache(options => options.Configuration = "localhost:6379");
 

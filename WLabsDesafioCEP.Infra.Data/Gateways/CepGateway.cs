@@ -21,11 +21,7 @@ namespace WLabsDesafioCEP.Infra.Data.Gateways
         public async Task<Endereco> ObterEnderecoPeloCepAsync(Cep cep)
         {
             Task<IMapeavelParaEndereco> viaCepTask = _viaCepClient.ObterEnderecoPeloCepAsync(cep);
-            Task<IMapeavelParaEndereco> apiCepTask = _apiCepClient.ObterEnderecoPeloCepAsync(cep).ContinueWith(r =>
-            {
-                IMapeavelParaEndereco mapeavelParaEndereco = r.Result;
-                return mapeavelParaEndereco;
-            });
+            Task<IMapeavelParaEndereco> apiCepTask = _apiCepClient.ObterEnderecoPeloCepAsync(cep);
             Task<IMapeavelParaEndereco> awesomeApiTask = _awesomeApiClient.ObterEnderecoPeloCepAsync(cep);
 
             Endereco endereco = await AguardarTasks(viaCepTask, apiCepTask, awesomeApiTask);

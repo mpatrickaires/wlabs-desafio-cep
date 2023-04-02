@@ -45,6 +45,7 @@ namespace WLabsDesafioCEP.WebAPI.Common.Extensions
             return exception switch
             {
                 ValidacaoException => HttpStatusCode.BadRequest,
+                NaoEncontradoException => HttpStatusCode.NotFound,
                 _ => HttpStatusCode.InternalServerError,
             };
         }

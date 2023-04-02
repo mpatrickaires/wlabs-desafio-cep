@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\WLabsDesafioCEP.Application\WLabsDesafioCEP.Application.csproj" />
+    <ProjectReference Include="..\WLabsDesafioCEP.Domain\WLabsDesafioCEP.Domain.csproj" />
+    <ProjectReference Include="..\WLabsDesafioCEP.Infra.Data\WLabsDesafioCEP.Infra.Data.csproj" />
+    <ProjectReference Include="..\WLabsDesafioCEP.WebAPI\WLabsDesafioCEP.WebAPI.csproj" />
+  </ItemGroup>
+
+</Project>

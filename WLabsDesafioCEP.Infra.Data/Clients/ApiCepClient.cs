@@ -17,7 +17,7 @@ namespace WLabsDesafioCEP.Infra.Data.Clients
             _apiCepRefitClient = apiCepRefitClient;
         }
 
-        public async Task<EnderecoApiCepDto> ObterEnderecoPeloCepAsync(Cep cep)
+        public async Task<IMapeavelParaEndereco> ObterEnderecoPeloCepAsync(Cep cep)
         {
             try
             {

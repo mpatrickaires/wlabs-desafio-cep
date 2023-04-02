@@ -1,10 +1,6 @@
-﻿using WLabsDesafioCEP.Domain.ValueObjects;
-using WLabsDesafioCEP.Infra.Data.Common.Dtos;
-
-namespace WLabsDesafioCEP.Infra.Data.Interfaces
+﻿namespace WLabsDesafioCEP.Infra.Data.Interfaces
 {
-    public interface IApiCepClient
+    public interface IApiCepClient : ICepClient
     {
-        Task<EnderecoApiCepDto> ObterEnderecoPeloCepAsync(Cep cep);
     }
 }

@@ -7,18 +7,18 @@ namespace WLabsDesafioCEP.Infra.Data.Gateways
 {
     public class CacheGateway : ICacheGateway
     {
-        private readonly IDistributedCache _cacheService;
+        private readonly IDistributedCache _cacheClient;
 
-        public CacheGateway(IDistributedCache cacheService)
+        public CacheGateway(IDistributedCache cacheClient)
         {
-            _cacheService = cacheService;
+            _cacheClient = cacheClient;
         }
 
         public async Task<string?> ObterAsync(string chave)
         {
             try
             {
-                string? valorCache = await _cacheService.GetStringAsync(chave);
+                string? valorCache = await _cacheClient.GetStringAsync(chave);
                 return valorCache;
             }
             catch (RedisConnectionException)
@@ -32,7 +32,7 @@ namespace WLabsDesafioCEP.Infra.Data.Gateways
         {
             try
             {
-                string? valorString = await _cacheService.GetStringAsync(chave);
+                string? valorString = await _cacheClient.GetStringAsync(chave);
 
                 if (valorString == null) return null;
 
@@ -43,7 +43,7 @@ namespace WLabsDesafioCEP.Infra.Data.Gateways
                 }
                 catch (JsonException)
                 {
-                    if (removerSeDesserializacaoFalhar) _ = _cacheService.RemoveAsync(chave);
+                    if (removerSeDesserializacaoFalhar) _ = _cacheClient.RemoveAsync(chave);
                     return null;
                 }
             }
@@ -57,7 +57,7 @@ namespace WLabsDesafioCEP.Infra.Data.Gateways
         {
             try
             {
-                await _cacheService.RemoveAsync(chave);
+                await _cacheClient.RemoveAsync(chave);
             }
             catch (RedisConnectionException)
             {
@@ -68,7 +68,7 @@ namespace WLabsDesafioCEP.Infra.Data.Gateways
         {
             try
             {
-                await _cacheService.SetStringAsync(chave, JsonSerializer.Serialize(valor));
+                await _cacheClient.SetStringAsync(chave, JsonSerializer.Serialize(valor));
             }
             catch (RedisConnectionException)
             {

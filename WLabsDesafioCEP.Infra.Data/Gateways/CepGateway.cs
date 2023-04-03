@@ -34,12 +34,11 @@ namespace WLabsDesafioCEP.Infra.Data.Gateways
 
             while (listaTasks.Any())
             {
-                Task<IMapeavelParaEndereco> task = await Task.WhenAny(tasks);
+                Task<IMapeavelParaEndereco> task = await Task.WhenAny(listaTasks);
                 try
                 {
                     IMapeavelParaEndereco resultado = await task;
                     return resultado.MapearParaEndereco();
-
                 }
                 catch (Exception e)
                 {
@@ -48,7 +47,7 @@ namespace WLabsDesafioCEP.Infra.Data.Gateways
                 }
             }
 
-            throw new Exception();
+            throw new CepInexistenteException();
         }
     }
 }

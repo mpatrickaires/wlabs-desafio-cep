@@ -36,7 +36,7 @@ namespace WLabsDesafioCEP.Application.Services
                 Endereco endereco = await _enderecoRepository.ObterEnderecoPeloCepAsync(cep);
                 return endereco.MapearParaEnderecoDto();
             }
-            catch (CepInexistenteException e)
+            catch (CepInexistenteException)
             {
                 throw new NaoEncontradoException("Nenhum endereço encontrado para o CEP informado!");
             }

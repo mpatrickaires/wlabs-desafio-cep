@@ -3,13 +3,13 @@
 namespace WLabsDesafioCEP.Domain.ValueObjects
 {
 
-    public record Cep
+    public class Cep
     {
         private const int TamanhoValido = 8;
         private const int PosicaoSeparador = 5;
         private const string Separador = "-";
 
-        public string Valor { get; init; }
+        public string Valor { get; }
         public string ValorComSeparador => Valor.Insert(PosicaoSeparador, Separador);
 
         public Cep(string valor)

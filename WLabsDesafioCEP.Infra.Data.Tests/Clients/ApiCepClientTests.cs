@@ -1,5 +1,6 @@
 ﻿using Refit;
 using System.Net;
+using WLabsDesafioCEP.Common.Tests.Utils;
 using WLabsDesafioCEP.Domain.Exceptions;
 using WLabsDesafioCEP.Domain.ValueObjects;
 using WLabsDesafioCEP.Infra.Data.Clients;
@@ -22,7 +23,7 @@ namespace WLabsDesafioCEP.Infra.Data.Tests.Clients
                 .ReturnsAsync(esperado);
 
             var apiCepClient = new ApiCepClient(apiCepRefit.Object);
-            IMapeavelParaEndereco resultado = await apiCepClient.ObterEnderecoPeloCepAsync(new Cep("58020782"));
+            IMapeavelParaEndereco resultado = await apiCepClient.ObterEnderecoPeloCepAsync(new Cep(CepUtils.ValorCepValido()));
 
             Assert.That(resultado, Is.EqualTo(esperado));
         }
@@ -38,7 +39,7 @@ namespace WLabsDesafioCEP.Infra.Data.Tests.Clients
 
             var apiCepClient = new ApiCepClient(apiCepRefit.Object);
 
-            Assert.ThrowsAsync<CepInexistenteException>(() => apiCepClient.ObterEnderecoPeloCepAsync(new Cep("58020782")));
+            Assert.ThrowsAsync<CepInexistenteException>(() => apiCepClient.ObterEnderecoPeloCepAsync(new Cep(CepUtils.ValorCepValido())));
         }
     }
 }

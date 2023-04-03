@@ -18,6 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\WLabsDesafioCEP.Common.Tests\WLabsDesafioCEP.Common.Tests.csproj" />
     <ProjectReference Include="..\WLabsDesafioCEP.Infra.Data\WLabsDesafioCEP.Infra.Data.csproj" />
   </ItemGroup>
 

@@ -1,4 +1,5 @@
-﻿using WLabsDesafioCEP.Domain.Entities;
+﻿using WLabsDesafioCEP.Common.Tests.Utils;
+using WLabsDesafioCEP.Domain.Entities;
 using WLabsDesafioCEP.Domain.Exceptions;
 using WLabsDesafioCEP.Domain.ValueObjects;
 using WLabsDesafioCEP.Infra.Data.Gateways;
@@ -31,7 +32,7 @@ namespace WLabsDesafioCEP.Infra.Data.Tests.Gateways
             SetupRetornarEndereco(viaCepClient);
 
             var cepGateway = new CepGateway(apiCepClient.Object, awesomeApiClient.Object, viaCepClient.Object);
-            Endereco resultado = await cepGateway.ObterEnderecoPeloCepAsync(new Cep("58020782"));
+            Endereco resultado = await cepGateway.ObterEnderecoPeloCepAsync(new Cep(CepUtils.ValorCepValido()));
 
             Assert.That(resultado, Is.TypeOf<Endereco>());
         }
@@ -60,7 +61,7 @@ namespace WLabsDesafioCEP.Infra.Data.Tests.Gateways
 
             var cepGateway = new CepGateway(apiCepClient.Object, awesomeApiClient.Object, viaCepClient.Object);
 
-            Assert.ThrowsAsync<CepInexistenteException>(() => cepGateway.ObterEnderecoPeloCepAsync(new Cep("58020782")));
+            Assert.ThrowsAsync<CepInexistenteException>(() => cepGateway.ObterEnderecoPeloCepAsync(new Cep(CepUtils.ValorCepValido())));
         }
 
         [Test]
@@ -87,7 +88,7 @@ namespace WLabsDesafioCEP.Infra.Data.Tests.Gateways
 
             var cepGateway = new CepGateway(apiCepClient.Object, awesomeApiClient.Object, viaCepClient.Object);
 
-            Assert.ThrowsAsync<CepInexistenteException>(() => cepGateway.ObterEnderecoPeloCepAsync(new Cep("58020782")));
+            Assert.ThrowsAsync<CepInexistenteException>(() => cepGateway.ObterEnderecoPeloCepAsync(new Cep(CepUtils.ValorCepValido())));
         }
     }
 }

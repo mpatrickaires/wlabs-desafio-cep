@@ -1,4 +1,5 @@
-﻿using WLabsDesafioCEP.Domain.Entities;
+﻿using WLabsDesafioCEP.Common.Tests.Utils;
+using WLabsDesafioCEP.Domain.Entities;
 using WLabsDesafioCEP.Domain.ValueObjects;
 using WLabsDesafioCEP.Infra.Data.Interfaces;
 using WLabsDesafioCEP.Infra.Data.Repositories;
@@ -20,7 +21,7 @@ namespace WLabsDesafioCEP.Infra.Data.Tests.Repositories
                 .ReturnsAsync(esperado);
 
             var enderecoRepository = new EnderecoRepository(cepGateway.Object, cacheGateway.Object);
-            Endereco resultado = await enderecoRepository.ObterEnderecoPeloCepAsync(new Cep("58020782"));
+            Endereco resultado = await enderecoRepository.ObterEnderecoPeloCepAsync(new Cep(CepUtils.ValorCepValido()));
 
             Assert.That(resultado, Is.EqualTo(esperado));
         }
@@ -38,7 +39,7 @@ namespace WLabsDesafioCEP.Infra.Data.Tests.Repositories
             var cacheGateway = new Mock<ICacheGateway>();
 
             var enderecoRepository = new EnderecoRepository(cepGateway.Object, cacheGateway.Object);
-            Endereco resultado = await enderecoRepository.ObterEnderecoPeloCepAsync(new Cep("58020782"));
+            Endereco resultado = await enderecoRepository.ObterEnderecoPeloCepAsync(new Cep(CepUtils.ValorCepValido()));
 
             Assert.That(resultado, Is.EqualTo(esperado));
         }

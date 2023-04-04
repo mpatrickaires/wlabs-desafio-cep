@@ -4,9 +4,9 @@ using WLabsDesafioCEP.Application;
 using WLabsDesafioCEP.Infra.Data;
 using WLabsDesafioCEP.Infra.Data.Refit;
 
-namespace WLabsDesafioCEP.Infra.IoC
+namespace WLabsDesafioCEP.Infra.IoC.Extensions
 {
-    public static class Bootstrapper
+    public static class IServiceCollectionExtensions
     {
         public static IServiceCollection ConfigurarServicos(this IServiceCollection services)
         {
@@ -19,12 +19,12 @@ namespace WLabsDesafioCEP.Infra.IoC
 
         private static void RegistrarServicos(this IServiceCollection services)
         {
-            services.RegistrarServicosScoped<ClasseInfraDataAssembly>("Repository", "Gateway", "Client");
+            services.RegistrarServicosScoped<ClasseInfraDataAssembly>("Repository", "Gateway", "Client", "LoggerService");
             services.RegistrarServicosScoped<ClasseApplicationAssembly>("Service");
         }
 
-        private static void RegistrarServicosScoped<TClasseAssembly>(this IServiceCollection services, 
-            params string[] sufixoTipos) 
+        private static void RegistrarServicosScoped<TClasseAssembly>(this IServiceCollection services,
+            params string[] sufixoTipos)
         {
             services.Scan(scan => scan
                 .FromAssemblyOf<TClasseAssembly>()
@@ -51,6 +51,5 @@ namespace WLabsDesafioCEP.Infra.IoC
 
             return services;
         }
-
     }
 }

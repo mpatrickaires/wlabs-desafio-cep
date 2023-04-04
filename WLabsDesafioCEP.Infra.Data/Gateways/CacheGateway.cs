@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Caching.Distributed;
 using StackExchange.Redis;
 using System.Text.Json;
+using WLabsDesafioCEP.Common.Interfaces;
 using WLabsDesafioCEP.Infra.Data.Interfaces;
 
 namespace WLabsDesafioCEP.Infra.Data.Gateways
@@ -8,10 +9,12 @@ namespace WLabsDesafioCEP.Infra.Data.Gateways
     public class CacheGateway : ICacheGateway
     {
         private readonly IDistributedCache _cacheClient;
+        private readonly ILoggerService _loggerService;
 
-        public CacheGateway(IDistributedCache cacheClient)
+        public CacheGateway(IDistributedCache cacheClient, ILoggerService loggerService)
         {
             _cacheClient = cacheClient;
+            _loggerService = loggerService;
         }
 
         public async Task<string?> ObterAsync(string chave)
@@ -21,11 +24,15 @@ namespace WLabsDesafioCEP.Infra.Data.Gateways
                 string? valorCache = await _cacheClient.GetStringAsync(chave);
                 return valorCache;
             }
-            catch (RedisConnectionException)
+            catch (RedisConnectionException e)
             {
+                CriarLogErroConexaoRedis(e);
                 return null;
             }
         }
+
+        private void CriarLogErroConexaoRedis(RedisConnectionException e) => _loggerService
+            .LogError("Erro de conexão com o Redis!", e.Message, e.StackTrace);
 
         public async Task<T?> ObterDesserializadoAsync<T>(string chave, bool removerSeDesserializacaoFalhar = true)
             where T : class
@@ -47,8 +54,9 @@ namespace WLabsDesafioCEP.Infra.Data.Gateways
                     return null;
                 }
             }
-            catch (RedisConnectionException)
+            catch (RedisConnectionException e)
             {
+                CriarLogErroConexaoRedis(e);
                 return null;
             }
         }
@@ -59,8 +67,9 @@ namespace WLabsDesafioCEP.Infra.Data.Gateways
             {
                 await _cacheClient.RemoveAsync(chave);
             }
-            catch (RedisConnectionException)
+            catch (RedisConnectionException e)
             {
+                CriarLogErroConexaoRedis(e);
             }
         }
 
@@ -70,8 +79,9 @@ namespace WLabsDesafioCEP.Infra.Data.Gateways
             {
                 await _cacheClient.SetStringAsync(chave, JsonSerializer.Serialize(valor));
             }
-            catch (RedisConnectionException)
+            catch (RedisConnectionException e)
             {
+                CriarLogErroConexaoRedis(e);
             }
         }
     }

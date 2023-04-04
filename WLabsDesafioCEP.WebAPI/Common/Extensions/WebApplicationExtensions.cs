@@ -8,6 +8,7 @@ namespace WLabsDesafioCEP.WebAPI.Common.Extensions
     public static class WebApplicationExtensions
     {
         private const string MensagemGenerica = "Ocorreu um erro durante o processamento da requisição!";
+        private const string ContentType = "application/json";
 
         public static void ConfigurarMiddlewareTratamentoException(this WebApplication app)
         {
@@ -20,13 +21,13 @@ namespace WLabsDesafioCEP.WebAPI.Common.Extensions
                     if (exception == null) 
                     {
                         context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
-                        context.Response.ContentType = "application/json";
+                        context.Response.ContentType = ContentType;
                         await context.Response.WriteAsJsonAsync(new RespostaApiDto { Mensagem = MensagemGenerica });
                         return;
                     }
 
                     context.Response.StatusCode = (int)ObterStatusCodePelaException(exception);
-                    context.Response.ContentType = "application/json";
+                    context.Response.ContentType = ContentType;
                     
                     if (context.Response.StatusCode == (int)HttpStatusCode.InternalServerError)
                     {
@@ -40,14 +41,11 @@ namespace WLabsDesafioCEP.WebAPI.Common.Extensions
             });
         }
 
-        private static HttpStatusCode ObterStatusCodePelaException(Exception exception)
+        private static HttpStatusCode ObterStatusCodePelaException(Exception exception) => exception switch
         {
-            return exception switch
-            {
-                ValidacaoException => HttpStatusCode.BadRequest,
-                NaoEncontradoException => HttpStatusCode.NotFound,
-                _ => HttpStatusCode.InternalServerError,
-            };
-        }
+            ValidacaoException => HttpStatusCode.BadRequest,
+            NaoEncontradoException => HttpStatusCode.NotFound,
+            _ => HttpStatusCode.InternalServerError,
+        };
     }
 }

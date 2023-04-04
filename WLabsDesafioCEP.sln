@@ -19,7 +19,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WLabsDesafioCEP.Domain.Test
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WLabsDesafioCEP.Infra.Data.Tests", "WLabsDesafioCEP.Infra.Data.Tests\WLabsDesafioCEP.Infra.Data.Tests.csproj", "{17F85576-FB7E-4A17-8064-EFF3E6A9F466}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WLabsDesafioCEP.Common.Tests", "WLabsDesafioCEP.Common.Tests\WLabsDesafioCEP.Common.Tests.csproj", "{7D9BCBE7-7633-49FD-BF02-170860AA2E20}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WLabsDesafioCEP.Common.Tests", "WLabsDesafioCEP.Common.Tests\WLabsDesafioCEP.Common.Tests.csproj", "{7D9BCBE7-7633-49FD-BF02-170860AA2E20}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WLabsDesafioCEP.Common", "WLabsDesafioCEP.Common\WLabsDesafioCEP.Common.csproj", "{E57C74D8-6111-4A34-8D15-FFD6A3D52C95}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -63,6 +65,10 @@ Global
 		{7D9BCBE7-7633-49FD-BF02-170860AA2E20}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7D9BCBE7-7633-49FD-BF02-170860AA2E20}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7D9BCBE7-7633-49FD-BF02-170860AA2E20}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E57C74D8-6111-4A34-8D15-FFD6A3D52C95}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E57C74D8-6111-4A34-8D15-FFD6A3D52C95}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E57C74D8-6111-4A34-8D15-FFD6A3D52C95}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E57C74D8-6111-4A34-8D15-FFD6A3D52C95}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

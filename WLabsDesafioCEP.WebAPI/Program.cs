@@ -1,4 +1,4 @@
-using WLabsDesafioCEP.Infra.IoC;
+using WLabsDesafioCEP.Infra.IoC.Extensions;
 using WLabsDesafioCEP.WebAPI.Common.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -11,6 +11,8 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.ConfigurarServicos();
+
+builder.ConfigurarSerilog();
 
 var app = builder.Build();
 

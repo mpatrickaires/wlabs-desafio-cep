@@ -7,6 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\WLabsDesafioCEP.Common\WLabsDesafioCEP.Common.csproj" />
     <ProjectReference Include="..\WLabsDesafioCEP.Domain\WLabsDesafioCEP.Domain.csproj" />
   </ItemGroup>
 

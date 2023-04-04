@@ -2,6 +2,7 @@
 using StackExchange.Redis;
 using System.Text;
 using System.Text.Json;
+using WLabsDesafioCEP.Common.Interfaces;
 using WLabsDesafioCEP.Infra.Data.Gateways;
 using WLabsDesafioCEP.Infra.Data.Tests.Common;
 
@@ -17,7 +18,9 @@ namespace WLabsDesafioCEP.Infra.Data.Tests.Gateways
             cacheService.Setup(c => c.GetAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(Array.Empty<byte>());
 
-            var cacheGateway = new CacheGateway(cacheService.Object);
+            var loggerService = new Mock<ILoggerService>();
+
+            var cacheGateway = new CacheGateway(cacheService.Object, loggerService.Object);
             string? resultado = await cacheGateway.ObterAsync("");
 
             Assert.That(resultado, Is.TypeOf<string>());
@@ -30,7 +33,9 @@ namespace WLabsDesafioCEP.Infra.Data.Tests.Gateways
             cacheService.Setup(c => c.GetAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()))
                 .ThrowsAsync(new RedisConnectionException(ConnectionFailureType.None, ""));
 
-            var cacheGateway = new CacheGateway(cacheService.Object);
+            var loggerService = new Mock<ILoggerService>();
+
+            var cacheGateway = new CacheGateway(cacheService.Object, loggerService.Object);
             string? resultado = await cacheGateway.ObterAsync("");
 
             Assert.That(resultado, Is.Null);
@@ -45,7 +50,9 @@ namespace WLabsDesafioCEP.Infra.Data.Tests.Gateways
             cacheService.Setup(c => c.GetAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(Encoding.UTF8.GetBytes(json));
 
-            var cacheGateway = new CacheGateway(cacheService.Object);
+            var loggerService = new Mock<ILoggerService>();
+
+            var cacheGateway = new CacheGateway(cacheService.Object, loggerService.Object);
             ClassePlaceholder? resultado = await cacheGateway.ObterDesserializadoAsync<ClassePlaceholder>("");
 
             Assert.That(resultado, Is.TypeOf<ClassePlaceholder>());
@@ -58,7 +65,9 @@ namespace WLabsDesafioCEP.Infra.Data.Tests.Gateways
             cacheService.Setup(c => c.GetAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync((byte[])null);
 
-            var cacheGateway = new CacheGateway(cacheService.Object);
+            var loggerService = new Mock<ILoggerService>();
+
+            var cacheGateway = new CacheGateway(cacheService.Object, loggerService.Object);
             ClassePlaceholder? resultado = await cacheGateway.ObterDesserializadoAsync<ClassePlaceholder>("");
 
             Assert.That(resultado, Is.Null);
@@ -71,7 +80,9 @@ namespace WLabsDesafioCEP.Infra.Data.Tests.Gateways
             cacheService.Setup(c => c.GetAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()))
                 .ThrowsAsync(new RedisConnectionException(ConnectionFailureType.None, ""));
 
-            var cacheGateway = new CacheGateway(cacheService.Object);
+            var loggerService = new Mock<ILoggerService>();
+
+            var cacheGateway = new CacheGateway(cacheService.Object, loggerService.Object);
             ClassePlaceholder? resultado = await cacheGateway.ObterDesserializadoAsync<ClassePlaceholder>("");
 
             Assert.That(resultado, Is.Null);
@@ -84,7 +95,9 @@ namespace WLabsDesafioCEP.Infra.Data.Tests.Gateways
             cacheService.Setup(c => c.GetAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()))
                                 .ReturnsAsync((byte[])null);
 
-            var cacheGateway = new CacheGateway(cacheService.Object);
+            var loggerService = new Mock<ILoggerService>();
+
+            var cacheGateway = new CacheGateway(cacheService.Object, loggerService.Object);
             ClassePlaceholder? resultado = await cacheGateway.ObterDesserializadoAsync<ClassePlaceholder>("");
 
             Assert.That(resultado, Is.Null);
